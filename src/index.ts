@@ -45,12 +45,13 @@ app.get("/:username", async (req: Request, res: Response) => {
 
       // Extract the src attribute (URL) of the profile photo
       const profilePhotoUrl = profilePhotoElement.attr("src");
-
+      const bio = $("div.tgme_page_description").text();
       // Prepare the JSON response
       const responseData = {
         username,
         name,
         profilePhotoUrl,
+        bio,
       };
 
       // Send the JSON response
@@ -62,7 +63,7 @@ app.get("/:username", async (req: Request, res: Response) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
