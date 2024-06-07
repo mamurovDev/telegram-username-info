@@ -1,22 +1,24 @@
-const express = require("express");
-const https = require("https");
-const cheerio = require("cheerio");
-const cors = require("cors");
-const app = express();
-app.use(cors());
+import express, { Request, Response } from "express";
+import https from "https";
+import cheerio from "cheerio";
+import cors from "cors";
+import { IncomingMessage } from "http";
 
-app.get("/:username", async (req, res) => {
+const app = express();
+app.use(cors<Request>());
+
+app.get("/:username", async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
-    // Make a GET request to the channel's URL
 
     let url = "";
-    if (req.params.username[0] == "@") {
-      url = `https://t.me/${req.params.username.slice(1)}`;
+    if (username[0] === "@") {
+      url = `https://t.me/${username.slice(1)}`;
     } else {
-      url = `https://t.me/${req.params.username}`;
+      url = `https://t.me/${username}`;
     }
-    const response: { on: Function } = await new Promise((resolve, reject) => {
+
+    const response = await new Promise<IncomingMessage>((resolve, reject) => {
       https
         .get(url, (response) => {
           resolve(response);
@@ -28,8 +30,8 @@ app.get("/:username", async (req, res) => {
 
     // Read the response data as a string
     let html = "";
-    response.on("data", (chunk) => {
-      html += chunk;
+    response.on("data", (chunk: Buffer) => {
+      html += chunk.toString();
     });
 
     // Process the HTML when all data is received
@@ -65,6 +67,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(404).send("Page not found");
 });
