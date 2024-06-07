@@ -1,8 +1,9 @@
 const express = require("express");
 const https = require("https");
 const cheerio = require("cheerio");
-
+const cors = require("cors");
 const app = express();
+app.use(cors());
 
 app.get("/:username", async (req, res) => {
   try {
@@ -15,7 +16,7 @@ app.get("/:username", async (req, res) => {
     } else {
       url = `https://t.me/${req.params.username}`;
     }
-    const response = await new Promise((resolve, reject) => {
+    const response: { on: Function } = await new Promise((resolve, reject) => {
       https
         .get(url, (response) => {
           resolve(response);
@@ -65,5 +66,5 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  res.status(404).send("Page not found"); 
+  res.status(404).send("Page not found");
 });
